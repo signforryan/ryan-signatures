@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sign for Ryan</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f5f5f5;
+      color: #333;
+    }
+    .wrapper {
+      max-width: 480px;
+      margin: 24px auto;
+      padding: 16px;
+      background: #ffffff;
+      border-radius: 12px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+    }
+    h1 {
+      font-size: 1.6rem;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+    p.subtitle {
+      font-size: 0.9rem;
+      text-align: center;
+      color: #666;
+      margin-top: 0;
+      margin-bottom: 16px;
+    }
+    label {
+      font-size: 0.9rem;
+      display: block;
+      margin: 8px 0 4px;
+    }
+    input, textarea, button {
+      width: 100%;
+      box-sizing: border-box;
+      font-size: 1rem;
+      padding: 8px 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-family: inherit;
+    }
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+    .signature-container {
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      margin: 12px 0;
+      background: #ffffff;
+      touch-action: none;
+    }
+    canvas {
+      width: 100%;
+      height: 220px;
+      display: block;
+    }
+    .buttons {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+    .buttons button {
+      flex: 1;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+    }
+    .primary {
+      background: #c0392b;
+      color: #fff;
+    }
+    .secondary {
+      background: #e0e0e0;
+      color: #333;
+    }
+    .message {
+      font-size: 0.9rem;
+      margin-top: 12px;
+      text-align: center;
+    }
+    .message.success {
+      color: #1e8449;
+    }
+    .message.error {
+      color: #c0392b;
+    }
+    .footer-note {
+      margin-top: 16px;
+      font-size: 0.75rem;
+      text-align: center;
+      color: #999;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <h1>Sign for Ryan</h1>
+    <p class="subtitle">
+      Please add your name and a short note, then sign below.
+    </p>
+
+    <label for="name">Your name (optional)</label>
+    <input id="name" type="text" placeholder="Name" />
+
+    <label for="note">Short message (optional)</label>
+    <textarea id="note" placeholder="A short note for Ryan's family"></textarea>
+
+    <label>Your signature</label>
+    <div class="signature-container">
+      <canvas id="signature-canvas"></canvas>
+    </div>
+
+    <div class="buttons">
+      <button class="secondary" id="clear-btn" type="button">Clear</button>
+      <button class="primary" id="submit-btn" type="button">Submit</button>
+    </div>
+
+    <div id="status" class="message"></div>
+
+    <p class="footer-note">
+      After you tap Submit, your signature will be saved for the card.
+    </p>
+  </div>
+
+  <!-- Signature Pad library -->
+  <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
+
+  <script>
+    // *** WE WILL SET THIS URL LATER ***
+    const WEB_APP_URL = "";
+
+    const canvas = document.getElementById('signature-canvas');
+    const clearBtn = document.getElementById('clear-btn');
+    const submitBtn = document.getElementById('submit-btn');
+    const statusEl = document.getElementById('status');
+    const nameInput = document.getElementById('name');
+    const noteInput = document.getElementById('note');
+
+    function resizeCanvas() {
+      const ratio = Math.max(window.devicePixelRatio || 1, 1);
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width * ratio;
+      canvas.height = rect.height * ratio;
+      const ctx = canvas.getContext('2d');
+      ctx.scale(ratio, ratio);
+      signaturePad.clear();
+    }
+
+    const signaturePad = new SignaturePad(canvas, {
+      backgroundColor: 'rgba(255,255,255,0)',
+      penColor: '#000000'
+    });
+
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    clearBtn.addEventListener('click', () => {
+      signaturePad.clear();
+      statusEl.textContent = '';
+      statusEl.className = 'message';
+    });
+
+    submitBtn.addEventListener('click', async () => {
+      if (signaturePad.isEmpty()) {
+        statusEl.textContent = 'Please add your signature before submitting.';
+        statusEl.className = 'message error';
+        return;
+      }
+
+      submitBtn.disabled = true;
+      clearBtn.disabled = true;
+      statusEl.textContent = 'Sending...';
+      statusEl.className = 'message';
+
+      try {
+        const dataUrl = signaturePad.toDataURL('image/png');
+        const base64 = dataUrl.split(',')[1];
+
+        const payload = {
+          name: nameInput.value.trim(),
+          message: noteInput.value.trim(),
+          imageData: base64
+        };
+
+        const params = new URLSearchParams();
+        params.append('data', JSON.stringify(payload));
+
+        await fetch(WEB_APP_URL, {
+          method: 'POST',
+          body: params
+        });
+
+        statusEl.textContent = 'Thank you. Your signature has been saved.';
+        statusEl.className = 'message success';
+        signaturePad.clear();
+        nameInput.value = '';
+        noteInput.value = '';
+
+      } catch (err) {
+        console.error(err);
+        statusEl.textContent = 'Something went wrong. Please try again.';
+        statusEl.className = 'message error';
+      }
+
+      submitBtn.disabled = false;
+      clearBtn.disabled = false;
+    });
+  </script>
+</body>
+</html>
