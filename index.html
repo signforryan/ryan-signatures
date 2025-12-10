@@ -111,7 +111,10 @@
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     canvas.width = canvas.offsetWidth * ratio;
     canvas.height = canvas.offsetHeight * ratio;
-    canvas.getContext("2d").scale(ratio, ratio);
+
+    const ctx = canvas.getContext("2d");
+    ctx.scale(ratio, ratio);
+
     if (signaturePad) signaturePad.clear();
   }
 
@@ -119,7 +122,7 @@
   resizeCanvas();
 
   signaturePad = new SignaturePad(canvas, {
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(0,0,0,0)',  // TRANSPARENT
     penColor: 'black'
   });
 
@@ -136,7 +139,6 @@
 
     fetch("https://script.google.com/macros/s/AKfycbweetett6xRwwoeL5DDsCDV1b_RrjxtLSkt1P9OIfiv38JgSq8fAmasXvBgTgXyORo1/exec", {
       method: "POST",
-      mode: "no-cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, image })
     })
