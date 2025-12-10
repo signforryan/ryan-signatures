@@ -130,8 +130,6 @@
   }
 
   function submitSig() {
-    const name = document.getElementById("name").value.trim();
-    if (!name) return alert("Please enter your name.");
     if (signaturePad.isEmpty()) return alert("Please provide a signature.");
 
     const image = signaturePad.toDataURL("image/png");
@@ -144,7 +142,7 @@
       method: "POST",
       mode: "no-cors",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, image })
+      body: JSON.stringify({ image })
     })
     .then(() => {
       signaturePad.clear();
