@@ -140,6 +140,7 @@
 
     fetch("https://script.google.com/macros/s/AKfycbxNT-RaBtBa_XUYip0X_ZBJDItwz9R9S19DWXqfkgbjWBRo73DB_vIjk5TuzYnACc3bhQ/exec", {
       method: "POST",
+      mode: "no-cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ image })
     })
