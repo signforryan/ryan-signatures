@@ -91,7 +91,7 @@
       color:#666;
     }
   </style>
-</head>
+</>
 
 <body>
 <div class="wrapper">
@@ -174,9 +174,9 @@
 
     let fileName = name.replace(/[^a-z0-9]/gi,"_") + "_" + Date.now() + ".png";
 
-    fetch("https://httpbin.org/post", {
+    fetch("https://script.google.com/macros/u/1/s/AKfycbzIaQH03XxAnq5UbM06VYXxSEM7i5Z1FonxSV3TUADb_D9tBk4PYKWPi5XXKaXWQJfr/exec", {
       method: "POST",
-      body: JSON.stringify({fileName, imageData})
+      body: JSON.stringify({name, image: imageData})
     });
 
     clearSig();
