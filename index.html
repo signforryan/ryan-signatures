@@ -101,7 +101,6 @@
   <p class="footer">After you tap Submit, your name and signature will be saved.</p>
 </div>
 
-<!-- SignaturePad Library -->
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 
 <script>
@@ -130,26 +129,22 @@
 
   function submitSig() {
     const name = document.getElementById("name").value.trim();
-    if (!name) {
-      alert("Please enter your name.");
-      return;
-    }
-    if (signaturePad.isEmpty()) {
-      alert("Please provide a signature.");
-      return;
-    }
+    if (!name) return alert("Please enter your name.");
+    if (signaturePad.isEmpty()) return alert("Please provide a signature.");
 
     const image = signaturePad.toDataURL("image/png");
 
     fetch("https://script.google.com/macros/s/AKfycbweetett6xRwwoeL5DDsCDV1b_RrjxtLSkt1P9OIfiv38JgSq8fAmasXvBgTgXyORo1/exec", {
       method: "POST",
+      mode: "no-cors",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, image })
+    })
+    .then(() => {
+      signaturePad.clear();
+      document.getElementById("name").value = "";
+      alert("Thank you! Your signature has been saved.");
     });
-
-    signaturePad.clear();
-    document.getElementById("name").value = "";
-    alert("Thank you! Your signature has been saved.");
   }
 </script>
 
