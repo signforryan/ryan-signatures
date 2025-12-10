@@ -136,6 +136,10 @@
 
     const image = signaturePad.toDataURL("image/png");
 
+    const btn = document.querySelector(".submit-btn");
+    btn.disabled = true;
+    btn.textContent = "Saving...";
+
     fetch("https://script.google.com/macros/s/AKfycbweetett6xRwwoeL5DDsCDV1b_RrjxtLSkt1P9OIfiv38JgSq8fAmasXvBgTgXyORo1/exec", {
       method: "POST",
       mode: "no-cors",
@@ -146,6 +150,10 @@
       signaturePad.clear();
       document.getElementById("name").value = "";
       alert("Thank you! Your signature has been saved.");
+    })
+    .finally(() => {
+      btn.disabled = false;
+      btn.textContent = "Submit";
     });
   }
 </script>
