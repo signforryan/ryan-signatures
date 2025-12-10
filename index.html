@@ -136,7 +136,14 @@
 
     const btn = document.querySelector(".submit-btn");
     btn.disabled = true;
-    btn.textContent = "Saving...";
+
+    // animated dots
+    let dotCount = 0;
+    const frames = ["Saving", "Saving.", "Saving..", "Saving..."];
+    const interval = setInterval(()=>{
+      btn.textContent = frames[dotCount];
+      dotCount = (dotCount + 1) % frames.length;
+    }, 350);
 
     fetch("https://script.google.com/macros/s/AKfycbxNT-RaBtBa_XUYip0X_ZBJDItwz9R9S19DWXqfkgbjWBRo73DB_vIjk5TuzYnACc3bhQ/exec", {
       method: "POST",
@@ -149,6 +156,7 @@
       alert("Thank you! Your signature has been saved.");
     })
     .finally(() => {
+      clearInterval(interval);
       btn.disabled = false;
       btn.textContent = "Submit";
     });
