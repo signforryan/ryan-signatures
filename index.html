@@ -181,21 +181,21 @@ function resizeCanvas() {
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-  ctx.lineWidth = 2; // default pen
+  ctx.lineWidth = 3; // slightly thicker pen
 }
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
 
 function setPen() {
   ctx.globalCompositeOperation = "source-over";
-  ctx.lineWidth = 2; // thin pen
+  ctx.lineWidth = 3; // pen thickness
   penBtn.classList.add("active");
   eraserBtn.classList.remove("active");
 }
 
 function setEraser() {
   ctx.globalCompositeOperation = "destination-out";
-  ctx.lineWidth = 10; // BIG eraser
+  ctx.lineWidth = 10; // eraser thickness
   penBtn.classList.remove("active");
   eraserBtn.classList.add("active");
 }
