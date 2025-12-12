@@ -1,173 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>Sign for Ryan</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <style>
-    body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: #ffffff;
-      color: #000000;
-    }
+<meta charset="UTF-8" />
+<title>Sign for Ryan</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    .wrapper {
-      max-width: 480px;
-      margin: 24px auto;
-      padding: 20px;
-      background: #ffffff;
-      border-radius: 12px;
-    }
+<style>
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  margin: 0;
+  background: #fff;
+  color: #000;
+}
 
-    h1 {
-      font-size: 1.6rem;
-      text-align: center;
-      margin-bottom: 24px;
-    }
+.wrapper {
+  max-width: 480px;
+  margin: 24px auto;
+  padding: 20px;
+}
 
-    .message {
-      font-size: 0.95rem;
-      line-height: 1.5;
-      text-align: center;
-      margin-bottom: 24px;
-    }
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+}
 
-    .message p {
-      margin: 0 0 6px;
-    }
+.message {
+  text-align: center;
+  font-size: 0.95rem;
+  margin-bottom: 24px;
+}
+.message p { margin: 0 0 6px; }
 
-    label {
-      font-size: 1rem;
-      display: block;
-      margin: 12px 0 6px;
-    }
+label {
+  display: block;
+  margin: 12px 0 6px;
+}
 
-    input {
-      width: 100%;
-      padding: 10px;
-      border-radius: 6px;
-      border: 1px solid #000;
-      font-size: 1rem;
-      margin-bottom: 16px;
-      box-sizing: border-box;
-    }
+input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  box-sizing: border-box;
+}
 
-    #sig-pad {
-      width: 100%;
-      height: 240px;
-      border-radius: 6px;
-      border: 1px solid #000;
-      background: #ffffff;
-      box-sizing: border-box;
-      touch-action: none;
-    }
+.sig-wrap {
+  position: relative;
+}
 
-    .tool-row {
-      display: flex;
-      gap: 12px;
-      margin-top: 12px;
-    }
+#sig-pad {
+  width: 100%;
+  height: 240px;
+  border: 1px solid #000;
+  border-radius: 6px;
+  touch-action: none;
+}
 
-    .tool-btn {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #000;
-      border-radius: 6px;
-      background: #ffffff;
-      font-size: 1.2rem;
-      cursor: pointer;
-    }
+.tools {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 6px;
+}
 
-    .tool-btn.active {
-      background: #000;
-      color: #ffffff;
-    }
+.tool {
+  width: 34px;
+  height: 34px;
+  border: 1px solid #000;
+  background: #fff;
+  border-radius: 6px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+}
 
-    .buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-    }
+.tool.active {
+  background: #000;
+  color: #fff;
+}
 
-    button {
-      flex: 1;
-      padding: 12px;
-      border: 1px solid #000;
-      font-size: 1rem;
-      cursor: pointer;
-      border-radius: 6px;
-      background: #ffffff;
-      color: #000;
-    }
+.buttons {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
 
-    .card-preview {
-      margin-top: 28px;
-      text-align: center;
-    }
+button {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid #000;
+  background: #fff;
+  border-radius: 6px;
+  cursor: pointer;
+}
 
-    .card-preview img {
-      width: 100%;
-      border-radius: 6px;
-      cursor: pointer;
-    }
+.card-preview {
+  margin-top: 28px;
+  text-align: center;
+}
+.card-preview img {
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+}
+.card-preview p {
+  font-size: 0.8rem;
+  margin-top: 8px;
+}
 
-    .card-preview p {
-      font-size: 0.8rem;
-      margin-top: 8px;
-    }
-
-    .overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.85);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-
-    .overlay img {
-      max-width: 95%;
-      max-height: 95%;
-    }
-  </style>
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+.overlay img {
+  max-width: 95%;
+  max-height: 95%;
+}
+</style>
 </head>
 
 <body>
 
 <div class="wrapper">
-  <h1>Sign for Ryan</h1>
+<h1>Sign for Ryan</h1>
 
-  <div class="message">
-    <p>We’re making a Christmas card for Ryan’s family.</p>
-    <p>Every signature will be placed on the card.</p>
-    <p>Thank you to everyone who takes the time to sign.</p>
-    <p>Merry Christmas.</p>
-  </div>
+<div class="message">
+<p>We’re making a Christmas card for Ryan’s family.</p>
+<p>Every signature will be placed on the card.</p>
+<p>Thank you to everyone who takes the time to sign.</p>
+<p>Merry Christmas.</p>
+</div>
 
-  <label>Your name</label>
-  <input id="name" placeholder="Name" />
+<label>Your name</label>
+<input id="name" placeholder="Name" />
 
-  <label>Your signature</label>
+<label>Your signature</label>
+
+<div class="sig-wrap">
   <canvas id="sig-pad"></canvas>
 
-  <!-- TOOL ICONS -->
-  <div class="tool-row">
-    <button class="tool-btn active" id="penBtn" onclick="setPen()">✏️</button>
-    <button class="tool-btn" id="eraserBtn" onclick="setEraser()">🧽</button>
+  <div class="tools">
+    <!-- Pen -->
+    <div class="tool active" id="penBtn" title="Pen">
+      ✏︎
+    </div>
+    <!-- Eraser -->
+    <div class="tool" id="eraserBtn" title="Eraser">
+      ⌫
+    </div>
   </div>
+</div>
 
-  <div class="buttons">
-    <button type="button" onclick="clearSig()">Clear</button>
-    <button type="button" class="submit-btn" onclick="submitSig()">Submit</button>
-  </div>
+<div class="buttons">
+  <button onclick="clearSig()">Clear</button>
+  <button onclick="submitSig()">Submit</button>
+</div>
 
-  <div class="card-preview">
-    <img src="card.jpg" onclick="openOverlay()" />
-    <p>Click image to view larger</p>
-  </div>
+<div class="card-preview">
+  <img src="card.jpg" onclick="openOverlay()" />
+  <p>Click image to view larger</p>
+</div>
 </div>
 
 <div class="overlay" id="overlay" onclick="closeOverlay()">
@@ -177,72 +174,86 @@
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 
 <script>
-  const canvas = document.getElementById("sig-pad");
-  const ctx = canvas.getContext("2d");
-  const penBtn = document.getElementById("penBtn");
-  const eraserBtn = document.getElementById("eraserBtn");
+const canvas = document.getElementById("sig-pad");
+const ctx = canvas.getContext("2d");
+const penBtn = document.getElementById("penBtn");
+const eraserBtn = document.getElementById("eraserBtn");
 
-  function resizeCanvas() {
-    const ratio = Math.max(window.devicePixelRatio || 1, 1);
-    canvas.width = canvas.offsetWidth * ratio;
-    canvas.height = canvas.offsetHeight * ratio;
-    ctx.scale(ratio, ratio);
+let erasing = false;
+
+function resizeCanvas() {
+  const ratio = Math.max(window.devicePixelRatio || 1, 1);
+  canvas.width = canvas.offsetWidth * ratio;
+  canvas.height = canvas.offsetHeight * ratio;
+  ctx.scale(ratio, ratio);
+}
+resizeCanvas();
+window.addEventListener("resize", resizeCanvas);
+
+const sigPad = new SignaturePad(canvas, {
+  penColor: "black",
+  minWidth: 2,
+  maxWidth: 2
+});
+
+function setPen() {
+  erasing = false;
+  ctx.globalCompositeOperation = "source-over";
+  penBtn.classList.add("active");
+  eraserBtn.classList.remove("active");
+}
+
+function setEraser() {
+  erasing = true;
+  ctx.globalCompositeOperation = "destination-out";
+  penBtn.classList.remove("active");
+  eraserBtn.classList.add("active");
+}
+
+penBtn.onclick = setPen;
+eraserBtn.onclick = setEraser;
+
+canvas.addEventListener("pointerdown", e => {
+  if (!erasing) return;
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX, e.offsetY);
+});
+
+canvas.addEventListener("pointermove", e => {
+  if (!erasing || e.buttons !== 1) return;
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+});
+
+function clearSig() {
+  sigPad.clear();
+  setPen();
+}
+
+function submitSig() {
+  if (sigPad.isEmpty()) {
+    alert("Please provide a signature.");
+    return;
   }
 
-  window.addEventListener("resize", resizeCanvas);
-  resizeCanvas();
-
-  const signaturePad = new SignaturePad(canvas, {
-    penColor: "black",
-    minWidth: 2,
-    maxWidth: 2
+  fetch("https://script.google.com/macros/s/AKfycbxNT-RaBtBa_XUYip0X_ZBJDItwz9R9S19DWXqfkgbjWBRo73DB_vIjk5TuzYnACc3bhQ/exec", {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ image: canvas.toDataURL("image/png") })
+  }).then(() => {
+    clearSig();
+    document.getElementById("name").value = "";
+    alert("Thank you. Your signature has been saved.");
   });
+}
 
-  function setPen() {
-    ctx.globalCompositeOperation = "source-over";
-    penBtn.classList.add("active");
-    eraserBtn.classList.remove("active");
-  }
-
-  function setEraser() {
-    ctx.globalCompositeOperation = "destination-out";
-    eraserBtn.classList.add("active");
-    penBtn.classList.remove("active");
-  }
-
-  function clearSig() {
-    signaturePad.clear();
-    setPen();
-  }
-
-  function submitSig() {
-    if (signaturePad.isEmpty()) {
-      alert("Please provide a signature.");
-      return;
-    }
-
-    const image = canvas.toDataURL("image/png");
-
-    fetch("https://script.google.com/macros/s/AKfycbxNT-RaBtBa_XUYip0X_ZBJDItwz9R9S19DWXqfkgbjWBRo73DB_vIjk5TuzYnACc3bhQ/exec", {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ image })
-    })
-    .then(() => {
-      clearSig();
-      document.getElementById("name").value = "";
-      alert("Thank you. Your signature has been saved.");
-    });
-  }
-
-  function openOverlay() {
-    document.getElementById("overlay").style.display = "flex";
-  }
-
-  function closeOverlay() {
-    document.getElementById("overlay").style.display = "none";
-  }
+function openOverlay() {
+  document.getElementById("overlay").style.display = "flex";
+}
+function closeOverlay() {
+  document.getElementById("overlay").style.display = "none";
+}
 </script>
 
 </body>
