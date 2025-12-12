@@ -60,8 +60,6 @@ input {
   position: absolute;
   top: 8px;
   right: 8px;
-  display: flex;
-  gap: 6px;
 }
 
 .tool {
@@ -74,11 +72,6 @@ input {
   place-items: center;
   cursor: pointer;
   font-size: 14px;
-}
-
-.tool.active {
-  background: #000;
-  color: #fff;
 }
 
 .buttons {
@@ -146,8 +139,7 @@ button {
   <canvas id="sig-pad"></canvas>
 
   <div class="tools">
-    <div class="tool active" id="penBtn">✏︎</div>
-    <div class="tool" id="eraserBtn">⌫</div>
+    <div class="tool" onclick="undoStroke()" title="Undo">↩︎</div>
   </div>
 </div>
 
@@ -169,21 +161,14 @@ button {
 <script>
 const canvas = document.getElementById("sig-pad");
 const ctx = canvas.getContext("2d");
-const penBtn = document.getElementById("penBtn");
-const eraserBtn = document.getElementById("eraserBtn");
 
 let drawing = false;
-
-// Smoothed position
-let sx = 0;
-let sy = 0;
-
-// Raw pointer position
-let tx = 0;
-let ty = 0;
-
-// Higher = smoother glide (0.2–0.35 sweet spot)
+let sx = 0, sy = 0;
+let tx = 0, ty = 0;
 const SMOOTHING = 0.22;
+
+// undo history
+let history = [];
 
 function resizeCanvas() {
   const ratio = window.devicePixelRatio || 1;
@@ -196,23 +181,6 @@ function resizeCanvas() {
 }
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
-
-function setPen() {
-  ctx.globalCompositeOperation = "source-over";
-  ctx.lineWidth = 3;
-  penBtn.classList.add("active");
-  eraserBtn.classList.remove("active");
-}
-
-function setEraser() {
-  ctx.globalCompositeOperation = "destination-out";
-  ctx.lineWidth = 15;
-  penBtn.classList.remove("active");
-  eraserBtn.classList.add("active");
-}
-
-penBtn.onclick = setPen;
-eraserBtn.onclick = setEraser;
 
 canvas.addEventListener("pointerdown", e => {
   drawing = true;
@@ -228,7 +196,6 @@ canvas.addEventListener("pointermove", e => {
   tx = e.offsetX;
   ty = e.offsetY;
 
-  // glide toward finger
   sx += (tx - sx) * SMOOTHING;
   sy += (ty - sy) * SMOOTHING;
 
@@ -236,12 +203,27 @@ canvas.addEventListener("pointermove", e => {
   ctx.stroke();
 });
 
-canvas.addEventListener("pointerup", () => drawing = false);
+canvas.addEventListener("pointerup", () => {
+  if (drawing) {
+    history.push(ctx.getImageData(0, 0, canvas.width, canvas.height));
+  }
+  drawing = false;
+});
+
 canvas.addEventListener("pointerleave", () => drawing = false);
+
+function undoStroke() {
+  if (history.length === 0) return;
+  history.pop();
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (history.length > 0) {
+    ctx.putImageData(history[history.length - 1], 0, 0);
+  }
+}
 
 function clearSig() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  setPen();
+  history = [];
 }
 
 function submitSig() {
