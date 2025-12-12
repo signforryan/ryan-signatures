@@ -63,8 +63,6 @@ label {
   display: grid;
   place-items: center;
   cursor: pointer;
-  font-size: 16px;
-  line-height: 1;
 }
 
 .buttons {
@@ -82,15 +80,26 @@ button {
   cursor: pointer;
 }
 
+/* CARD PREVIEW */
 .card-preview {
   margin-top: 28px;
   text-align: center;
 }
-.card-preview img {
+
+.card-frame {
   width: 100%;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
   border-radius: 6px;
+}
+
+.card-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   cursor: pointer;
 }
+
 .card-preview p {
   font-size: 0.8rem;
   margin-top: 8px;
@@ -129,7 +138,27 @@ button {
   <canvas id="sig-pad"></canvas>
 
   <div class="tools">
-    <div class="tool" onclick="undoStroke()" title="Undo">⟲</div>
+    <!-- Curved Undo Icon -->
+    <div class="tool" onclick="undoStroke()" title="Undo last stroke">
+      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+        <path
+          d="M9 7H4V12"
+          stroke="#000"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"
+        />
+        <path
+          d="M4 12C4 7.5 7.5 4 12 4C16.5 4 20 7.5 20 12C20 16.5 16.5 20 12 20"
+          stroke="#000"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          fill="none"
+        />
+      </svg>
+    </div>
   </div>
 </div>
 
@@ -139,7 +168,9 @@ button {
 </div>
 
 <div class="card-preview">
-  <img src="card.jpg" onclick="openOverlay()" />
+  <div class="card-frame">
+    <img src="card.jpg" onclick="openOverlay()" />
+  </div>
   <p>Click image to view larger</p>
 </div>
 </div>
@@ -157,7 +188,6 @@ let sx = 0, sy = 0;
 let tx = 0, ty = 0;
 const SMOOTHING = 0.22;
 
-// undo history
 let history = [];
 
 function resizeCanvas() {
