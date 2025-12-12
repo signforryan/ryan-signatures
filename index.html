@@ -146,8 +146,8 @@ button {
   <canvas id="sig-pad"></canvas>
 
   <div class="tools">
-    <div class="tool active" id="penBtn" title="Pen">✏︎</div>
-    <div class="tool" id="eraserBtn" title="Eraser">⌫</div>
+    <div class="tool active" id="penBtn">✏︎</div>
+    <div class="tool" id="eraserBtn">⌫</div>
   </div>
 </div>
 
@@ -173,8 +173,17 @@ const penBtn = document.getElementById("penBtn");
 const eraserBtn = document.getElementById("eraserBtn");
 
 let drawing = false;
-let lastX = 0;
-let lastY = 0;
+
+// Smoothed position
+let sx = 0;
+let sy = 0;
+
+// Raw pointer position
+let tx = 0;
+let ty = 0;
+
+// Higher = smoother glide (0.2–0.35 sweet spot)
+const SMOOTHING = 0.25;
 
 function resizeCanvas() {
   const ratio = window.devicePixelRatio || 1;
@@ -183,7 +192,7 @@ function resizeCanvas() {
   ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
-  ctx.lineWidth = 3; // pen thickness
+  ctx.lineWidth = 3;
 }
 resizeCanvas();
 window.addEventListener("resize", resizeCanvas);
@@ -197,7 +206,7 @@ function setPen() {
 
 function setEraser() {
   ctx.globalCompositeOperation = "destination-out";
-  ctx.lineWidth = 15; // BIGGER eraser (+5)
+  ctx.lineWidth = 15;
   penBtn.classList.remove("active");
   eraserBtn.classList.add("active");
 }
@@ -207,29 +216,24 @@ eraserBtn.onclick = setEraser;
 
 canvas.addEventListener("pointerdown", e => {
   drawing = true;
-  lastX = e.offsetX;
-  lastY = e.offsetY;
+  sx = tx = e.offsetX;
+  sy = ty = e.offsetY;
   ctx.beginPath();
-  ctx.moveTo(lastX, lastY);
+  ctx.moveTo(sx, sy);
 });
 
 canvas.addEventListener("pointermove", e => {
   if (!drawing) return;
 
-  const x = e.offsetX;
-  const y = e.offsetY;
+  tx = e.offsetX;
+  ty = e.offsetY;
 
-  // quadratic smoothing
-  ctx.quadraticCurveTo(
-    lastX,
-    lastY,
-    (x + lastX) / 2,
-    (y + lastY) / 2
-  );
+  // glide toward finger
+  sx += (tx - sx) * SMOOTHING;
+  sy += (ty - sy) * SMOOTHING;
+
+  ctx.lineTo(sx, sy);
   ctx.stroke();
-
-  lastX = x;
-  lastY = y;
 });
 
 canvas.addEventListener("pointerup", () => drawing = false);
