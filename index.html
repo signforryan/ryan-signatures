@@ -9,75 +9,86 @@
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
       margin: 0;
       padding: 0;
-      background: #f5f5f5;
-      color: #333;
+      background: #ffffff;
+      color: #000000;
     }
+
     .wrapper {
       max-width: 480px;
       margin: 24px auto;
-      padding: 16px;
-      background: #fff;
+      padding: 20px;
+      background: #ffffff;
       border-radius: 12px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.06);
     }
+
     h1 {
       font-size: 1.6rem;
       text-align: center;
-      margin-bottom: 4px;
-    }
-    .subtitle {
-      font-size: 0.9rem;
-      text-align: center;
-      color: #666;
-      margin-top: 0;
       margin-bottom: 16px;
     }
+
+    .message {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .message p {
+      margin: 0 0 12px;
+    }
+
     label {
       font-size: 1rem;
       display: block;
-      margin: 8px 0 4px;
+      margin: 12px 0 6px;
     }
+
     input {
       width: 100%;
       padding: 10px;
       border-radius: 6px;
-      border: 1px solid #bbb;
+      border: 1px solid #000;
       font-size: 1rem;
       margin-bottom: 12px;
+      color: #000;
     }
+
     #sig-pad {
       width: 100%;
       height: 240px;
-      border: 1px solid #bbb;
+      border: 2px solid #000;
       border-radius: 6px;
-      background: white;
+      background: #ffffff;
     }
+
     .buttons {
       display: flex;
       gap: 12px;
       margin-top: 12px;
     }
+
     button {
       flex: 1;
       padding: 12px;
-      border: none;
+      border: 1px solid #000;
       font-size: 1rem;
       cursor: pointer;
       border-radius: 6px;
+      background: #ffffff;
+      color: #000000;
     }
-    .clear-btn {
-      background: #e8e8e8;
-      color: #000;
+
+    button:disabled {
+      opacity: 0.6;
+      cursor: default;
     }
-    .submit-btn {
-      background: #ba3e36;
-      color: #fff;
-    }
+
     .footer {
       text-align: center;
       font-size: 0.8rem;
-      margin-top: 12px;
-      color:#666;
+      margin-top: 14px;
+      color: #000;
     }
   </style>
 </head>
@@ -85,7 +96,13 @@
 <body>
 <div class="wrapper">
   <h1>Sign for Ryan</h1>
-  <p class="subtitle">Please add your name, then sign below.</p>
+
+  <div class="message">
+    <p>We’re making a Christmas card for Ryan’s family.</p>
+    <p>Every signature will be placed on the card.</p>
+    <p>Thank you to everyone who takes the time to sign.</p>
+    <p>Merry Christmas.</p>
+  </div>
 
   <label for="name">Your name</label>
   <input id="name" required placeholder="Name" />
@@ -94,11 +111,11 @@
   <canvas id="sig-pad"></canvas>
 
   <div class="buttons">
-    <button type="button" class="clear-btn" onclick="clearSig()">Clear</button>
+    <button type="button" onclick="clearSig()">Clear</button>
     <button type="button" class="submit-btn" onclick="submitSig()">Submit</button>
   </div>
 
-  <p class="footer">After you tap Submit, your name and signature will be saved.</p>
+  <p class="footer">Your signature will be saved after you tap Submit.</p>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
@@ -130,11 +147,14 @@
   }
 
   function submitSig() {
-    if (signaturePad.isEmpty()) return alert("Please provide a signature.");
+    if (signaturePad.isEmpty()) {
+      alert("Please provide a signature.");
+      return;
+    }
 
     const image = signaturePad.toDataURL("image/png");
-
     const btn = document.querySelector(".submit-btn");
+
     btn.disabled = true;
     btn.textContent = "Saving...";
 
@@ -147,7 +167,7 @@
     .then(() => {
       signaturePad.clear();
       document.getElementById("name").value = "";
-      alert("Thank you! Your signature has been saved.");
+      alert("Thank you. Your signature has been saved.");
     })
     .finally(() => {
       btn.disabled = false;
