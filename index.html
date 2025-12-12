@@ -63,6 +63,8 @@ label {
   display: grid;
   place-items: center;
   cursor: pointer;
+  font-size: 15px;
+  line-height: 1;
 }
 
 .buttons {
@@ -86,6 +88,7 @@ button {
   text-align: center;
 }
 
+/* Aspect-ratio wrapper for zoomed crop */
 .card-frame {
   width: 100%;
   aspect-ratio: 4 / 3;
@@ -96,7 +99,7 @@ button {
 .card-frame img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: cover; /* zooms while preserving ratio */
   cursor: pointer;
 }
 
@@ -138,27 +141,8 @@ button {
   <canvas id="sig-pad"></canvas>
 
   <div class="tools">
-    <!-- Curved Undo Icon -->
-    <div class="tool" onclick="undoStroke()" title="Undo last stroke">
-      <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          d="M9 7H4V12"
-          stroke="#000"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          fill="none"
-        />
-        <path
-          d="M4 12C4 7.5 7.5 4 12 4C16.5 4 20 7.5 20 12C20 16.5 16.5 20 12 20"
-          stroke="#000"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          fill="none"
-        />
-      </svg>
-    </div>
+    <!-- Backspace icon -->
+    <div class="tool" onclick="undoStroke()" title="Undo last stroke">⌫</div>
   </div>
 </div>
 
@@ -188,6 +172,7 @@ let sx = 0, sy = 0;
 let tx = 0, ty = 0;
 const SMOOTHING = 0.22;
 
+// undo history
 let history = [];
 
 function resizeCanvas() {
