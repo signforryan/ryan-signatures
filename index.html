@@ -61,6 +61,28 @@
       border: 1px solid #000;
       background: #ffffff;
       box-sizing: border-box;
+      touch-action: none;
+    }
+
+    .tool-row {
+      display: flex;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .tool-btn {
+      flex: 1;
+      padding: 12px;
+      border: 1px solid #000;
+      border-radius: 6px;
+      background: #ffffff;
+      font-size: 1.2rem;
+      cursor: pointer;
+    }
+
+    .tool-btn.active {
+      background: #000;
+      color: #ffffff;
     }
 
     .buttons {
@@ -78,10 +100,6 @@
       border-radius: 6px;
       background: #ffffff;
       color: #000;
-    }
-
-    button:disabled {
-      opacity: 0.6;
     }
 
     .card-preview {
@@ -126,14 +144,20 @@
     <p>We’re making a Christmas card for Ryan’s family.</p>
     <p>Every signature will be placed on the card.</p>
     <p>Thank you to everyone who takes the time to sign.</p>
-    <p>Merry Christmas!</p>
+    <p>Merry Christmas.</p>
   </div>
 
-  <label for="name">Your name</label>
-  <input id="name" required placeholder="Name" />
+  <label>Your name</label>
+  <input id="name" placeholder="Name" />
 
   <label>Your signature</label>
   <canvas id="sig-pad"></canvas>
+
+  <!-- TOOL ICONS -->
+  <div class="tool-row">
+    <button class="tool-btn active" id="penBtn" onclick="setPen()">✏️</button>
+    <button class="tool-btn" id="eraserBtn" onclick="setEraser()">🧽</button>
+  </div>
 
   <div class="buttons">
     <button type="button" onclick="clearSig()">Clear</button>
@@ -141,40 +165,54 @@
   </div>
 
   <div class="card-preview">
-    <img src="card.jpg" alt="Christmas card preview" onclick="openOverlay()" />
+    <img src="card.jpg" onclick="openOverlay()" />
     <p>Click image to view larger</p>
   </div>
 </div>
 
 <div class="overlay" id="overlay" onclick="closeOverlay()">
-  <img src="card.jpg" alt="Expanded card image" />
+  <img src="card.jpg" />
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
 
 <script>
   const canvas = document.getElementById("sig-pad");
-  let signaturePad;
+  const ctx = canvas.getContext("2d");
+  const penBtn = document.getElementById("penBtn");
+  const eraserBtn = document.getElementById("eraserBtn");
 
   function resizeCanvas() {
     const ratio = Math.max(window.devicePixelRatio || 1, 1);
     canvas.width = canvas.offsetWidth * ratio;
     canvas.height = canvas.offsetHeight * ratio;
-    canvas.getContext("2d").scale(ratio, ratio);
-    if (signaturePad) signaturePad.clear();
+    ctx.scale(ratio, ratio);
   }
 
   window.addEventListener("resize", resizeCanvas);
   resizeCanvas();
 
-  signaturePad = new SignaturePad(canvas, {
-    penColor: 'black',
+  const signaturePad = new SignaturePad(canvas, {
+    penColor: "black",
     minWidth: 2,
     maxWidth: 2
   });
 
+  function setPen() {
+    ctx.globalCompositeOperation = "source-over";
+    penBtn.classList.add("active");
+    eraserBtn.classList.remove("active");
+  }
+
+  function setEraser() {
+    ctx.globalCompositeOperation = "destination-out";
+    eraserBtn.classList.add("active");
+    penBtn.classList.remove("active");
+  }
+
   function clearSig() {
     signaturePad.clear();
+    setPen();
   }
 
   function submitSig() {
@@ -183,11 +221,7 @@
       return;
     }
 
-    const image = signaturePad.toDataURL("image/png");
-    const btn = document.querySelector(".submit-btn");
-
-    btn.disabled = true;
-    btn.textContent = "Saving...";
+    const image = canvas.toDataURL("image/png");
 
     fetch("https://script.google.com/macros/s/AKfycbxNT-RaBtBa_XUYip0X_ZBJDItwz9R9S19DWXqfkgbjWBRo73DB_vIjk5TuzYnACc3bhQ/exec", {
       method: "POST",
@@ -196,13 +230,9 @@
       body: JSON.stringify({ image })
     })
     .then(() => {
-      signaturePad.clear();
+      clearSig();
       document.getElementById("name").value = "";
       alert("Thank you. Your signature has been saved.");
-    })
-    .finally(() => {
-      btn.disabled = false;
-      btn.textContent = "Submit";
     });
   }
 
