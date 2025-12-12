@@ -36,14 +36,6 @@ label {
   margin: 12px 0 6px;
 }
 
-input {
-  width: 100%;
-  padding: 10px;
-  border: 1px solid #000;
-  border-radius: 6px;
-  box-sizing: border-box;
-}
-
 .sig-wrap {
   position: relative;
 }
@@ -71,7 +63,8 @@ input {
   display: grid;
   place-items: center;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 16px;
+  line-height: 1;
 }
 
 .buttons {
@@ -130,16 +123,13 @@ button {
   <p>Merry Christmas.</p>
 </div>
 
-<label>Your name</label>
-<input id="name" placeholder="Name" />
-
 <label>Your signature</label>
 
 <div class="sig-wrap">
   <canvas id="sig-pad"></canvas>
 
   <div class="tools">
-    <div class="tool" onclick="undoStroke()" title="Undo">↩︎</div>
+    <div class="tool" onclick="undoStroke()" title="Undo">⟲</div>
   </div>
 </div>
 
@@ -240,7 +230,6 @@ function submitSig() {
     body: JSON.stringify({ image: data })
   }).then(() => {
     clearSig();
-    document.getElementById("name").value = "";
     alert("Thank you. Your signature has been saved.");
   });
 }
