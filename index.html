@@ -80,6 +80,11 @@ button {
   cursor: pointer;
 }
 
+button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
 .card-preview {
   margin-top: 28px;
   text-align: center;
@@ -137,25 +142,10 @@ button {
   <canvas id="sig-pad"></canvas>
 
   <div class="tools">
-    <!-- Clean curved arrow undo -->
     <div class="tool" onclick="undoStroke()" title="Undo last stroke">
       <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
-        <path
-          d="M10 7L5 12L10 17"
-          stroke="#000"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          fill="none"
-        />
-        <path
-          d="M5 12H14C17.5 12 20 14.5 20 18"
-          stroke="#000"
-          stroke-width="2"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          fill="none"
-        />
+        <path d="M10 7L5 12L10 17" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M5 12H14C17.5 12 20 14.5 20 18" stroke="#000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
       </svg>
     </div>
   </div>
@@ -163,7 +153,11 @@ button {
 
 <div class="buttons">
   <button onclick="clearSig()">Clear</button>
-  <button onclick="submitSig()">Submit</button>
+  <button id="submit-btn" onclick="submitSig()">Submit</button>
+</div>
+
+<div id="submit-status" style="display:none; margin-top:16px; text-align:center; font-size:0.9rem;">
+  Please wait while your signature is being submitted…
 </div>
 
 <div class="card-preview">
@@ -249,12 +243,20 @@ function submitSig() {
     return;
   }
 
+  const status = document.getElementById("submit-status");
+  const submitBtn = document.getElementById("submit-btn");
+
+  status.style.display = "block";
+  submitBtn.disabled = true;
+
   fetch("https://script.google.com/macros/s/AKfycbxNT-RaBtBa_XUYip0X_ZBJDItwz9R9S19DWXqfkgbjWBRo73DB_vIjk5TuzYnACc3bhQ/exec", {
     method: "POST",
     mode: "no-cors",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ image: data })
   }).then(() => {
+    status.style.display = "none";
+    submitBtn.disabled = false;
     clearSig();
     alert("Thank you. Your signature has been saved.");
   });
